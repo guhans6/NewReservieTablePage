@@ -13,6 +13,8 @@ class TableCollectionViewCell: UICollectionViewCell {
     let nameLabel = UILabel()
     let emailLabel = UILabel()
     let tableNameLabel = UILabel()
+    let iconView = UIImageView()
+    let countLabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,7 +39,7 @@ class TableCollectionViewCell: UICollectionViewCell {
         
         self.contentView.layer.cornerRadius = 10.0
 //        self.contentView.layer.borderWidth = 1.0
-//        self.contentView.layer.borderColor = UIColor.clear.cgColor
+
         self.contentView.layer.masksToBounds = true
 
         self.layer.shadowColor = UIColor.black.cgColor
@@ -53,41 +55,62 @@ class TableCollectionViewCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .lightGray
         imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 10
         contentView.addSubview(imageView)
 
-        nameLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        nameLabel.font = UIFont.systemFont(ofSize: 17, weight: .light)
         nameLabel.textColor = .label
+        nameLabel.numberOfLines = 0
+        nameLabel.lineBreakMode = .byWordWrapping
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(nameLabel)
 
         emailLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         emailLabel.textColor = .secondaryLabel
         emailLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(emailLabel)
-
-        tableNameLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        tableNameLabel.text = ""
-        tableNameLabel.textColor = .secondaryLabel
-        tableNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(tableNameLabel)
+//        contentView.addSubview(emailLabel)
+//
+//        tableNameLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+//        tableNameLabel.text = ""
+//        tableNameLabel.textColor = .secondaryLabel
+//        tableNameLabel.numberOfLines = 0
+//        tableNameLabel.translatesAutoresizingMaskIntoConstraints = false
+//        contentView.addSubview(tableNameLabel)
+//
+//        iconView.image = UIImage(systemName: "person.fill")
+//        iconView.contentMode = .scaleAspectFit
+//        iconView.translatesAutoresizingMaskIntoConstraints = false
+//        contentView.addSubview(iconView)
+//        contentView.bringSubviewToFront(iconView)
 
         NSLayoutConstraint.activate([
-            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            nameLabel.bottomAnchor.constraint(equalTo: emailLabel.topAnchor, constant: -4),
             
-            emailLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            emailLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            emailLabel.bottomAnchor.constraint(equalTo: tableNameLabel.topAnchor, constant: -4),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            imageView.topAnchor.constraint(equalTo: topAnchor,constant: 5),
+//            imageView.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -8),
+            imageView.heightAnchor.constraint(equalToConstant: 100),
             
-            tableNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            tableNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            tableNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+//            nameLabel.bottomAnchor.constraint(equalTo: emailLabel.topAnchor, constant: -2),
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
             
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.topAnchor.constraint(equalTo: topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -8),
+//            emailLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+//            emailLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -13),
+//            emailLabel.bottomAnchor.constraint(equalTo: tableNameLabel.topAnchor, constant: -4),
+//            emailLabel.topAnchor.constraint(equalTo: nam)
+            
+//            tableNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+//            tableNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+//            tableNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+//            tableNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
+            
+//            iconView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+////            iconView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+//            iconView.centerYAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: -10),
+//            iconView.heightAnchor.constraint(equalToConstant: 24),
+//            iconView.widthAnchor.constraint(equalToConstant: 24)
 
         ])
     }
@@ -100,82 +123,4 @@ class TableCollectionViewCell: UICollectionViewCell {
         nameLabel.text = nameLabelText
         tableNameLabel.text = subLabelText
     }
-
 }
-
-
-//class TableCollectionViewCell: UICollectionViewCell {
-//
-//    let containerView = UIView()
-//    let imageView = UIImageView()
-//    let nameLabel = UILabel()
-//    let emailLabel = UILabel()
-//    let tableNameLabel = UILabel()
-//
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        setupViews()
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        super.init(coder: aDecoder)
-//        setupViews()
-//    }
-//
-//    private func setupViews() {
-//        backgroundColor = .clear
-//        containerView.backgroundColor = .white
-//        containerView.layer.cornerRadius = 8
-//        containerView.clipsToBounds = true
-//        containerView.layer.shadowColor = UIColor.gray.cgColor
-//        containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
-//        containerView.layer.shadowOpacity = 0.4
-//        containerView.layer.shadowRadius = 4
-//        containerView.translatesAutoresizingMaskIntoConstraints = false
-//        addSubview(containerView)
-//
-//        imageView.contentMode = .scaleAspectFill
-//        imageView.clipsToBounds = true
-//        imageView.backgroundColor = .lightGray
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        containerView.addSubview(imageView)
-//
-//        nameLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-//        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-//        containerView.addSubview(nameLabel)
-//
-//        emailLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-//        emailLabel.textColor = .gray
-//        emailLabel.translatesAutoresizingMaskIntoConstraints = false
-//        containerView.addSubview(emailLabel)
-//
-//        tableNameLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-//        tableNameLabel.translatesAutoresizingMaskIntoConstraints = false
-//        containerView.addSubview(tableNameLabel)
-//
-//        NSLayoutConstraint.activate([
-//            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-//            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-//            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-//            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-//
-//            imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-//            imageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-//            imageView.topAnchor.constraint(equalTo: containerView.topAnchor),
-//            imageView.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -8),
-//
-//            nameLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-//            nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-//            nameLabel.bottomAnchor.constraint(equalTo: emailLabel.topAnchor, constant: -4),
-//
-//            emailLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-//            emailLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-//            emailLabel.bottomAnchor.constraint(equalTo: tableNameLabel.topAnchor, constant: -4),
-//
-//            tableNameLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-//            tableNameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-//            tableNameLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8)
-//        ])
-//    }
-//
-//}

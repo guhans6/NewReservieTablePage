@@ -7,14 +7,16 @@
 
 import UIKit
 
-import UIKit
-
 class ViewController: UIViewController {
     
     private let scrollView = UIScrollView()
     let myView = TopView()
     private let titleLabel = UILabel()
+    private let bookedTablesLabel = UILabel()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let eventsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private var eventsCellWidth: CGFloat = 300
+    private let eventLabel = UILabel()
     
     private let pickerView = UIPickerView()
     private let dateFormatter: DateFormatter = {
@@ -26,6 +28,10 @@ class ViewController: UIViewController {
     private let meals = ["Breakfast", "Lunch", "Dinner"]
     private var selectedDate: Date?
     private var selectedMealIndex: Int = 0
+   
+//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+//        .portrait
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,11 +41,10 @@ class ViewController: UIViewController {
         configureScrollView()
         configureTitleLabel()
         setupTopView()
+        configureBookedLabel()
         configureCollectionView()
-//        scrollView.contentSize = CGSize(width: view.bounds.width, height: collectionView.frame.maxY + 50)
-        scrollView.contentSize = CGSize(width: view.bounds.width, height: 1000)
-        
-        scrollView.backgroundColor = .red
+        configureEventLabel()
+        configureEventsCollectionView()
     }
     
     
@@ -49,10 +54,7 @@ class ViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.delegate = self
-//        scrollView.refreshControl = UIRefreshControl()
-//        scrollView.refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
-        
-        // Set up constraints to position and size the scroll view and its contents
+
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -67,17 +69,17 @@ class ViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         let fontMetrics = UIFontMetrics(forTextStyle: .largeTitle)
         titleLabel.font = fontMetrics.scaledFont(for: .systemFont(ofSize: 30, weight: .bold))
-        titleLabel.text = "Reserve Table "
+        titleLabel.text = "Reserve Table"
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 18),
+            titleLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
             titleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: scrollView.trailingAnchor),
         ])
     }
     
     private func setupTopView() {
-        
+            
         scrollView.addSubview(myView)
         myView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -100,61 +102,42 @@ class ViewController: UIViewController {
         selectedDate = Date()
     }
     
-//    private func configureCollectionView() {
-//
-//        // Configure collection view
-//        collectionView.backgroundColor = .systemBackground
-//        collectionView.showsHorizontalScrollIndicator = false
-//        collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.dataSource = self
-//        collectionView.delegate = self
-//        collectionView.contentInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 6)
-//        collectionView.tag = 1
-//
-//        let layout = UICollectionViewFlowLayout()
-//        layout.scrollDirection = .horizontal
-////        layout.minimumInteritemSpacing = 1
-////        layout.minimumLineSpacing = 1
-////        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 10)
-////        layout.itemSize = CGSize(width: (view.frame.width / 3) - 2, height: 150)
-//        layout.itemSize = CGSize(width: 150, height: 170)
-//        collectionView.collectionViewLayout = layout
-////        collectionView.backgroundColor = .red
-//
-//        // Register cell class
-//        collectionView.register(TableCollectionViewCell.self, forCellWithReuseIdentifier: "TableCollectionViewCell")
-//        scrollView.addSubview(collectionView)
-//
-//
-//        NSLayoutConstraint.activate([
-//            collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-//            collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-//            collectionView.topAnchor.constraint(equalTo: myView.bottomAnchor, constant: 40),
-//            collectionView.heightAnchor.constraint(equalToConstant: 400),
-////            collectionView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-//            collectionView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-//        ])
-//    }
+    private func configureBookedLabel() {
+        
+        scrollView.addSubview(bookedTablesLabel)
+        
+        bookedTablesLabel.translatesAutoresizingMaskIntoConstraints = false
+        let fontMetrics = UIFontMetrics(forTextStyle: .largeTitle)
+        bookedTablesLabel.font = fontMetrics.scaledFont(for: .systemFont(ofSize: 20, weight: .semibold))
+        bookedTablesLabel.text = "Available Tables"
+        
+        NSLayoutConstraint.activate([
+            bookedTablesLabel.topAnchor.constraint(equalTo: myView.bottomAnchor, constant: 20),
+            bookedTablesLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 18),
+            bookedTablesLabel.trailingAnchor.constraint(lessThanOrEqualTo: scrollView.trailingAnchor),
+        ])
+    }
     
     private func configureCollectionView() {
-        // Configure collection view
-        collectionView.backgroundColor = .systemBackground
+        
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 6)
         collectionView.tag = 1
+        collectionView.layer.cornerRadius = 12
 
-        collectionView.isHidden = true
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 10
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 10)
-        let itemWidth = (view.frame.width - 2 * layout.sectionInset.left - layout.minimumInteritemSpacing) / 2
-        let itemHeight = 150
-        layout.itemSize = CGSize(width: itemWidth, height: CGFloat(itemHeight))
+        
+        let viewWidth = view.frame.width > view.frame.height ? view.frame.height : view.frame.width
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
+        let itemWidth = (viewWidth - 2 * layout.sectionInset.left - layout.minimumInteritemSpacing) / 2
+        let itemHeight = 150 + 30
+        layout.itemSize = CGSize(width: itemWidth - 10, height: CGFloat(itemHeight))
         collectionView.collectionViewLayout = layout
 
         // Register cell class
@@ -164,12 +147,28 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: myView.bottomAnchor, constant: 40),
-            collectionView.heightAnchor.constraint(equalToConstant: 350),
-            collectionView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            collectionView.topAnchor.constraint(equalTo: bookedTablesLabel.bottomAnchor, constant: 30),
+            collectionView.heightAnchor.constraint(equalToConstant: CGFloat(itemHeight) * 2 + layout.minimumLineSpacing + 20),
+            collectionView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+//            collectionView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
 
+    private func configureEventLabel() {
+        
+        scrollView.addSubview(eventLabel)
+        
+        eventLabel.translatesAutoresizingMaskIntoConstraints = false
+        let fontMetrics = UIFontMetrics(forTextStyle: .largeTitle)
+        eventLabel.font = fontMetrics.scaledFont(for: .systemFont(ofSize: 20, weight: .semibold))
+        eventLabel.text = "Reserved Tables"
+        
+        NSLayoutConstraint.activate([
+            eventLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 10),
+            eventLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 18),
+            eventLabel.trailingAnchor.constraint(lessThanOrEqualTo: scrollView.trailingAnchor),
+        ])
+    }
     
     @objc private func myViewTapped() {
         
@@ -183,6 +182,7 @@ class ViewController: UIViewController {
         if let sheetController = sheetVC.sheetPresentationController {
             sheetController.detents = [.medium(), .large()]
             sheetController.prefersEdgeAttachedInCompactHeight = true
+            sheetController.prefersGrabberVisible = true
         }
         
         // Add a done button
@@ -217,6 +217,40 @@ class ViewController: UIViewController {
         if let selectedDate = selectedDate {
             myView.update(date: selectedDate, meal: meals[selectedMealIndex])
         }
+    }
+    
+    private func configureEventsCollectionView() {
+        
+        // Configure collection view
+        eventsCollectionView.backgroundColor = .systemBackground
+        eventsCollectionView.showsHorizontalScrollIndicator = false
+        eventsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        eventsCollectionView.dataSource = self
+        eventsCollectionView.delegate = self
+        eventsCollectionView.contentInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 6)
+        eventsCollectionView.tag = 2
+        
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 16
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 10)
+        layout.itemSize = CGSize(width: 300, height: 200)
+        eventsCollectionView.collectionViewLayout = layout
+//        collectionView.backgroundColor = .red
+        
+        // Register cell class
+        eventsCollectionView.register(TableCollectionViewCell.self, forCellWithReuseIdentifier: "TableCollectionViewCell")
+        scrollView.addSubview(eventsCollectionView)
+        
+        NSLayoutConstraint.activate([
+            eventsCollectionView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            eventsCollectionView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            eventsCollectionView.topAnchor.constraint(equalTo: eventLabel.bottomAnchor),
+            eventsCollectionView.heightAnchor.constraint(equalToConstant: 250),
+            eventsCollectionView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            eventsCollectionView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
     }
 }
 
@@ -293,8 +327,11 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         if collectionView.tag == 1 {
             
             cell.imageView.image = UIImage(named: "Table")
-            cell.nameLabel.text = "Ted"
+            cell.nameLabel.text = "Ted Gardern View"
             cell.tableNameLabel.text = "\(indexPath.row)"
+        } else {
+            
+            cell.imageView.image = UIImage(named: "Table")
         }
         
         return cell
@@ -310,7 +347,36 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
 }
 
+extension ViewController {
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        if scrollView == collectionView {
+            let cellWidthIncludingSpacing = eventsCellWidth + 16
+            var offset = targetContentOffset.pointee
+            let index = (offset.x + scrollView.contentInset.left) / cellWidthIncludingSpacing
+            let roundedIndex = round(index)
+            
+            offset = CGPoint(x: roundedIndex * cellWidthIncludingSpacing - scrollView.contentInset.left, y: -scrollView.contentInset.top)
+            targetContentOffset.pointee = offset
+        }
+    }
+
+}
+
 extension ViewController: UIScrollViewDelegate {
     
-    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        if scrollView == eventsCollectionView {
+            let cellWidthIncludingSpacing = eventsCellWidth + 16
+            var offset = scrollView.contentOffset.x
+            let index = (offset + scrollView.contentInset.left) / cellWidthIncludingSpacing
+            let roundedIndex = round(index)
+
+            offset = roundedIndex * cellWidthIncludingSpacing - scrollView.contentInset.left
+            scrollView.setContentOffset(CGPoint(x: offset, y: -scrollView.contentInset.top), animated: true)
+        }
+    }
+
 }
